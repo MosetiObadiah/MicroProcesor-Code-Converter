@@ -121,6 +121,8 @@ public class Window extends javax.swing.JFrame implements ActionListener {
 
         reEnterBtn.setFont(new java.awt.Font("Nimbus Sans Narrow", Font.BOLD, 16)); // NOI18N
         reEnterBtn.setText("Re Enter");
+        // TODO implement shortcut for re entering
+        reEnterBtn.setToolTipText("Press Ctrl + R to re enter");
         reEnterBtn.addActionListener(this);
 
         saveBtn.setFont(new java.awt.Font("Nimbus Sans Narrow", Font.BOLD, 16)); // NOI18N
@@ -216,6 +218,9 @@ public class Window extends javax.swing.JFrame implements ActionListener {
         } else if(actionEvent.getSource() == reEnterBtn) {
             /* debug
             JOptionPane.showMessageDialog(null, "Re-Enter Btn Pressed"); */
+            inputTextField.setText("");
+            inputTextField.requestFocusInWindow();
+            outputTextArea.setText("");
 
         } else if(actionEvent.getSource() == inputTextField) {
             evaluateBtn.doClick();
@@ -240,6 +245,6 @@ public class Window extends javax.swing.JFrame implements ActionListener {
     }
 
     public void updateTextArea(String text) {
-        outputTextArea.setText(text);
+        outputTextArea.append(text);
     }
 }

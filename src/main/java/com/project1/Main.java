@@ -17,5 +17,6 @@ public class Main {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Window().setVisible(true));
+    
     }
 }
