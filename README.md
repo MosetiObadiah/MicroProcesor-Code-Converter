@@ -7,5 +7,6 @@
   ![image](https://github.com/MosetiObadiah/MicroProcesor-Code-Converter/assets/124773540/901bb35d-d2a7-4a49-bb4b-bacbe13890c6)
 
   The ouput should be as follows:
+  
   ![image](https://github.com/MosetiObadiah/MicroProcesor-Code-Converter/assets/124773540/c88872aa-87f9-435a-907d-60250dbe132b)
 
