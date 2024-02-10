@@ -10,3 +10,14 @@
   
   ![image](https://github.com/MosetiObadiah/MicroProcesor-Code-Converter/assets/124773540/c88872aa-87f9-435a-907d-60250dbe132b)
 
+
+  _INSTALLATION_
+    Requirements:
+      1. A computer with java installed
+      
+    Process:
+      1. Clone the project to you machine
+      2. Navigate to Main.java
+      3. Run the Main.java file
+    
+
