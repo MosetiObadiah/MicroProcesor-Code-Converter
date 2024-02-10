@@ -11,12 +11,11 @@ public class Main {
     public static void main(String[] args) {
         try{
             UIManager.setLookAndFeel(new FlatMacDarkLaf());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NullPointerException | SecurityException | UnsupportedLookAndFeelException e) {
+            System.out.println(e.getMessage());
         }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Window().setVisible(true));
-    
     }
 }

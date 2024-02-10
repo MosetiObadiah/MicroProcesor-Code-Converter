@@ -19,15 +19,13 @@ public class Tokenizer {
     //  add whitespace support to the application
     //  fix bugs
     public void startEngine(ArrayList<String> expression) {
-        //System.out.println("Evaluation Started");
-        //System.out.println(expression);
 
         opcodeLookup.add(("Move A,C\t000"));
         opcodeLookup.add(("Move B,C\t001"));
-        opcodeLookup.add(("ADD\t\t010"));
-        opcodeLookup.add(("SUB\t\t\t011"));
-        opcodeLookup.add(("AND\t\t\t100"));
-        opcodeLookup.add(("OR\t\t\t101"));
+        opcodeLookup.add(("ADD\t010"));
+        opcodeLookup.add(("SUB\t011"));
+        opcodeLookup.add(("AND\t100"));
+        opcodeLookup.add(("OR\t101"));
         opcodeLookup.add(("Load register A\t110"));
         opcodeLookup.add(("Load register B\t111"));
 
@@ -42,12 +40,11 @@ public class Tokenizer {
         }
         for (String operand : arithmeticAndLogicalOperators) {
             switch (operand) {
-                case "&" -> operationName.add("AND");
-                case "|" -> operationName.add("OR");
-                case "+" -> operationName.add("ADD");
-                case "-" -> operationName.add("SUBTRACT");
+                case "&" -> operationName.add(opcodeLookup.get(4));
+                case "|" -> operationName.add(opcodeLookup.get(5));
+                case "+" -> operationName.add(opcodeLookup.get(2));
+                case "-" -> operationName.add(opcodeLookup.get(3));
             }
-
         }
 
         System.out.println("Numbers: " + numbers);
@@ -55,20 +52,52 @@ public class Tokenizer {
         System.out.println("Operators: " + arithmeticAndLogicalOperators);
         System.out.println("Operators names: " + operationName);
 
-        if (numbers.size() == 2){
-            mainWindow.updateTextArea(cleanFormattedOutput(opcodeLookup.get(6), opcodeLookup.get(7), numbers.get(0), binaryEquivalent.getFirst(), binaryEquivalent.get(1), numbers.get(1), operationName.getFirst()));
-        }
+        String formattedOutput = cleanFormattedOutput(numbers, binaryEquivalent, operationName, opcodeLookup);
+        // TODO fix bug the text area not clearing upon pressing re enter key
+        mainWindow.updateTextArea(formattedOutput);
+
     }
 
-    private String cleanFormattedOutput(String reg1, String reg2, String num1, String bin1, String bin2, String num2, String operationName) {
-        return reg1 + "\n" +
-                "with "+ num1 + "\t" + bin1 + "\n" +
-                reg2 + "\n" +
-                "with " + num2 + "\t" + bin2 + "\n" +
-                operationName + "\n" +
-                "contents of Register B from the\n" +
-                "contents of Register C and\n" +
-                "store the results in Register C";
+    private String cleanFormattedOutput(ArrayList<String> numbers, ArrayList<String> binaryEquivalent, ArrayList<String> operationName, ArrayList<String> opcodeLookup) {
+        StringBuilder concatOutput = new StringBuilder();
+
+        if (numbers.size() < 2) {
+            return "Error: Expression must contain at least two numbers";
+        }
+
+        // Load the first number into Register A
+        concatOutput.append(opcodeLookup.get(6)).append("\n");
+        concatOutput.append("with ").append(numbers.get(0)).append("\t").append(binaryEquivalent.get(0)).append("\n");
+
+        // Load the second number into Register B
+        concatOutput.append(opcodeLookup.get(7)).append("\n");
+        concatOutput.append("with ").append(numbers.get(1)).append("\t").append(binaryEquivalent.get(1)).append("\n");
+
+        // Perform the first operation between Register A and Register B
+        // TODO use the correct syntax according to the operation {+,&,| with, - from}
+        concatOutput.append(operationName.getFirst()).append("\n");
+        concatOutput.append("the contents of Register B from the\n");
+        concatOutput.append("contents of Register A and\n");
+        concatOutput.append("store the results in Register C").append("\n");
+
+        // Move the result from Register C to Register A (only perform this move operation once)
+        if(numbers.size() > 2) {
+            concatOutput.append(opcodeLookup.getFirst()).append("\n");
+        }
+
+        // If there's a third number available, continue with additional operations
+        for (int i = 2; i < numbers.size(); i++) {
+            // Load the next number into Register B
+            concatOutput.append(opcodeLookup.get(7)).append("\n");
+            concatOutput.append("with ").append(numbers.get(i)).append("\t").append(binaryEquivalent.get(i)).append("\n");
+
+            // Perform the next operation between Register A and Register B
+            concatOutput.append(operationName.get(i - 1)).append("\n");
+            concatOutput.append("the contents of Register B from the\n");
+            concatOutput.append("contents of Register A and\n");
+            concatOutput.append("store the results in Register C").append("\n");
+        }
+        return concatOutput.toString();
     }
 
     private String convertToBinary(int num) {
@@ -79,5 +108,12 @@ public class Tokenizer {
             num = num / 2;
         }
         return Arrays.toString(binary);
+    }
+
+    public void clearArrayLists() {
+        numbers.clear();
+        arithmeticAndLogicalOperators.clear();
+        binaryEquivalent.clear();
+        operationName.clear();
     }
 }

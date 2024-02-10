@@ -11,6 +11,9 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -20,9 +23,6 @@ import java.util.regex.Pattern;
  */
 public class Window extends javax.swing.JFrame implements ActionListener {
 
-    /**
-     * Creates new form Window
-     */
     public Window() {
         initComponents();
     }
@@ -34,8 +34,9 @@ public class Window extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton manualBtn;
     private javax.swing.JTextField inputTextField;
     private javax.swing.JTextArea outputTextArea;
-    private final String pattern = "[0-9\\-\\&\\|\\+]";
+    private final String pattern = "[0-9\\-&|+]";
     ArrayList<String> expressionText;
+    Tokenizer tokenMaker;
 
     // End of variables declaration//GEN-END:variables
 
@@ -200,27 +201,32 @@ public class Window extends javax.swing.JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if(actionEvent.getSource() == evaluateBtn) {
-            /* debug
-            JOptionPane.showMessageDialog(null, "evaluate Btn Pressed"); */
-
-            //pass the expression to the tokenizer so that it can be split up accordingly
-            Tokenizer tokenMaker = new Tokenizer(this);
+            tokenMaker = new Tokenizer(this);
             tokenMaker.startEngine(expressionText);
 
         } else if(actionEvent.getSource() == saveBtn) {
-            /*debug
-            JOptionPane.showMessageDialog(null, "save Btn Pressed"); */
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                try (PrintWriter writer = new PrintWriter(fileToSave)) {
+                    writer.print(outputTextArea.getText());
+                    JOptionPane.showMessageDialog(this, "File saved successfully!");
+                } catch (IOException | SecurityException e ) {
+                    System.out.println(e.getMessage());
+                    JOptionPane.showMessageDialog(this, "Failed to save file!");
+                }
+            }
 
         } else if(actionEvent.getSource() == manualBtn) {
-            /* debug
-            JOptionPane.showMessageDialog(null, "manual Btn Pressed"); */
+            // TODO add a manual page to tell users how to use the program
 
         } else if(actionEvent.getSource() == reEnterBtn) {
-            /* debug
-            JOptionPane.showMessageDialog(null, "Re-Enter Btn Pressed"); */
             inputTextField.setText("");
-            inputTextField.requestFocusInWindow();
             outputTextArea.setText("");
+            inputTextField.requestFocusInWindow();
+
+            tokenMaker.clearArrayLists();
 
         } else if(actionEvent.getSource() == inputTextField) {
             evaluateBtn.doClick();
