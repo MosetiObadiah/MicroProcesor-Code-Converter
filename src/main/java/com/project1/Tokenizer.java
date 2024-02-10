@@ -55,7 +55,9 @@ public class Tokenizer {
         System.out.println("Operators: " + arithmeticAndLogicalOperators);
         System.out.println("Operators names: " + operationName);
 
-        mainWindow.updateTextArea(cleanFormattedOutput(opcodeLookup.get(6), opcodeLookup.get(7), numbers.get(0), binaryEquivalent.getFirst(), binaryEquivalent.get(1), numbers.get(1), operationName.getFirst()));
+        if (numbers.size() == 2){
+            mainWindow.updateTextArea(cleanFormattedOutput(opcodeLookup.get(6), opcodeLookup.get(7), numbers.get(0), binaryEquivalent.getFirst(), binaryEquivalent.get(1), numbers.get(1), operationName.getFirst()));
+        }
     }
 
     private String cleanFormattedOutput(String reg1, String reg2, String num1, String bin1, String bin2, String num2, String operationName) {
